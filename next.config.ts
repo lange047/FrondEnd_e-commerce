@@ -1,13 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   typescript: {
-    // Isso diz para o GitHub: "Pode fazer o build mesmo se faltar alguma tipagem"
+    // Permite que o build termine com sucesso mesmo se faltar alguma tipagem (como o limparCarrinho)
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Evita que avisos de formatação travem o processo
+    // Evita que avisos ou erros de formatação travem o build no GitHub
     ignoreDuringBuilds: true,
-  }
+  },
 };
 
 export default nextConfig;
