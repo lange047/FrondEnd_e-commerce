@@ -22,10 +22,13 @@ jobs:
 
     - name: Instalar Dependências
       run: npm install
+      working-directory: ./
 
-    - name: Executar Verificação
-      # Usando a sintaxe direta que evita conflito com nomes de pastas no servidor Linux
+    - name: Executar Verificação (Lint)
       run: npx next lint
+      # Força o comando a rodar no diretório raiz correto, sem duplicar pastas
+      working-directory: ./
 
     - name: Executar Build
       run: npm run build
+      working-directory: ./
