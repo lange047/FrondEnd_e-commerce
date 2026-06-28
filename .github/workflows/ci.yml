@@ -1,0 +1,31 @@
+name: Verificação de Código
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Baixar o código do repositório
+      uses: actions/checkout@v4
+
+    - name: Configurar o Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Instalar Dependências
+      run: npm install
+
+    - name: Executar Verificação
+      # Usando a sintaxe direta que evita conflito com nomes de pastas no servidor Linux
+      run: npx next lint
+
+    - name: Executar Build
+      run: npm run build
