@@ -28,6 +28,7 @@ interface CarrinhoContextType {
   adicionarItem: (produto: Produto) => void;
   valorTotal: number;
   quantidadeTotal: number;
+  limparCarrinho: () => void;
 }
 
 const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);

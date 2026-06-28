@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useCarrinho } from '@/context/CarrinhoContext'; // Ajuste o caminho do import do seu context se necessário
+import { useCarrinho } from '@/context/CarrinhoContext';
 import Image from 'next/image';
 
 interface CarrinhoDrawerProps {
@@ -10,7 +10,8 @@ interface CarrinhoDrawerProps {
 }
 
 export default function CarrinhoDrawer({ isOpen, onClose }: CarrinhoDrawerProps) {
-  const { itens, alterarQuantidade, removerItem, valorTotal } = useCarrinho();
+  // Adicionada a extração de limparCarrinho aqui para alinhar com o uso em page.tsx
+  const { itens, alterarQuantidade, removerItem, valorTotal, limparCarrinho } = useCarrinho();
 
   if (!isOpen) return null;
 
@@ -79,15 +80,22 @@ export default function CarrinhoDrawer({ isOpen, onClose }: CarrinhoDrawerProps)
 
           {/* Footer do Carrinho */}
           {itens.length > 0 && (
-            <div className="p-6 border-t bg-gray-50">
-              <div className="flex justify-between text-base font-medium text-gray-900 mb-4">
+            <div className="p-6 border-t bg-gray-50 space-y-3">
+              <div className="flex justify-between text-base font-medium text-gray-900 mb-1">
                 <span>Total:</span>
                 <span className="text-xl font-bold text-emerald-600">
                   R$ {valorTotal.toFixed(2)}
                 </span>
               </div>
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition">
+              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition mb-1">
                 Finalizar Compra
+              </button>
+              {/* Botão opcional para esvaziar o carrinho */}
+              <button 
+                onClick={() => limparCarrinho?.()} 
+                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 rounded-lg transition text-sm"
+              >
+                Limpar Carrinho
               </button>
             </div>
           )}
