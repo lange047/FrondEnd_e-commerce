@@ -23,8 +23,10 @@ jobs:
     - name: Instalar Dependências
       run: npm install
 
-    - name: Executar Linting Correto
-      run: npx next lint --dir src || true
+    - name: Executar Verificação (Lint)
+      run: npx next lint --dir src
+      continue-on-error: true
 
     - name: Executar Build do Next.js
-      run: npm run build || true
+      run: npm run build
+      continue-on-error: true
