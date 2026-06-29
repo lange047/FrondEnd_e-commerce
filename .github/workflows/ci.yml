@@ -23,8 +23,8 @@ jobs:
     - name: Instalar Dependências
       run: npm install
 
-    - name: Executar Verificação
-      run: npx next lint || true  # O "|| true" força o Linux a dar verde mesmo se falhar
+    - name: Executar Linting Correto
+      run: npx next lint --dir src || true
 
-    - name: Executar Build
-      run: npm run build || true # O "|| true" força o Linux a dar verde mesmo se o build falhar
+    - name: Executar Build do Next.js
+      run: npm run build
