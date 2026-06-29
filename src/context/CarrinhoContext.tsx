@@ -26,7 +26,8 @@ export interface CarrinhoContextType {
   alterarQuantidade: (id: number, quantidade: number) => void;
   removerItem: (id: number) => void;
   valorTotal: number;
-  limparCarrinho?: () => void; // <--- ADICIONE EXATAMENTE ESTA LINHA
+  limparCarrinho?: () => void;
+
 }
 
 const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
