@@ -24,9 +24,13 @@ function HomePage() {
   const [modalCategoriaAberto, setModalCategoriaAberto] = useState(false);
   const [modalProdutoAberto, setModalProdutoAberto] = useState(false);
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
+
+  onst { alterarQuantidade, removerItem, valorTotal, limparCarrinho, itens = [] } = useCarrinho() as any;
   
-  const { alterarQuantidade, removerItem, valorTotal, limparCarrinho, itens = [] } = useCarrinho() as any;
-  const quantidadeTotal = itens.reduce((acc: number, item: any) => acc + (item.quantidade || 0), 0);
+  const quantidadeTotal = React.useMemo(() => {
+    if (!itens || !Array.isArray(itens)) return 0;
+    return itens.reduce((acc: number, item: any) => acc + (item?.quantidade || 0), 0);
+  }, [itens]);
 
   const produtosFiltrados = TODOS_PRODUTOS.filter((p: any) => {
     const matchesCategoria = categoriaAtiva ? p.category.toLowerCase() === categoriaAtiva.toLowerCase() : true;
