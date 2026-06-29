@@ -4,8 +4,12 @@ import React, { useState } from 'react';
 import { Search, User, ShoppingBag, LayoutDashboard, ChevronLeft, ChevronRight, X, Plus, Minus, Trash2 } from 'lucide-react';
 import Sidebar from '@/components/layout/Sidebar';
 import ProdutoCard from '@/components/produto/ProdutoCard';
-import { TODOS_PRODUTOS } from '@/data/produtos';
+import { TODOS_PRODUTOS, type Produto } from '@/data/produtos';
 import { useCarrinho, CarrinhoProvider } from '@/context/CarrinhoContext';
+
+interface ItemCarrinho extends Produto {
+  quantidade: number;
+}
 
 export default function HomePageContainer() {
   return (
@@ -25,16 +29,20 @@ function HomePage() {
   const [modalProdutoAberto, setModalProdutoAberto] = useState(false);
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
 
-  onst { alterarQuantidade, removerItem, valorTotal, limparCarrinho, itens = [] } = useCarrinho() as any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { alterarQuantidade, removerItem, valorTotal, limparCarrinho, itens = [] } = useCarrinho() as any;
   
   const quantidadeTotal = React.useMemo(() => {
     if (!itens || !Array.isArray(itens)) return 0;
-    return itens.reduce((acc: number, item: any) => acc + (item?.quantidade || 0), 0);
+    return itens.reduce((acc: number, item: ItemCarrinho) => acc + (item?.quantidade || 0), 0);
   }, [itens]);
 
-  const produtosFiltrados = TODOS_PRODUTOS.filter((p: any) => {
-    const matchesCategoria = categoriaAtiva ? p.category.toLowerCase() === categoriaAtiva.toLowerCase() : true;
-    const matchesBusca = p.name.toLowerCase().includes(busca.toLowerCase()) || p.category.toLowerCase().includes(busca.toLowerCase());
+  const produtosFiltrados = TODOS_PRODUTOS.filter((p: Produto) => {
+    const categoryName = p.category || '';
+    const productName = p.name || '';
+    
+    const matchesCategoria = categoriaAtiva ? categoryName.toLowerCase() === categoriaAtiva.toLowerCase() : true;
+    const matchesBusca = productName.toLowerCase().includes(busca.toLowerCase()) || categoryName.toLowerCase().includes(busca.toLowerCase());
     return matchesCategoria && matchesBusca;
   });
 
@@ -42,12 +50,11 @@ function HomePage() {
   const paginaValida = paginaAtual > totalPaginas ? totalPaginas : paginaAtual;
   const produtosPaginados = produtosFiltrados.slice((paginaValida - 1) * itensPorPagina, paginaValida * itensPorPagina);
 
-  // Função executada ao finalizar a compra
   const handleFinalizarCompra = () => {
     alert("Compra finalizada com sucesso!");
-    setCarrinhoAberto(false); // Fecha o drawer lateral
+    setCarrinhoAberto(false);
     if (limparCarrinho) {
-      limparCarrinho(); // Limpa os itens do carrinho se a função estiver disponível no Context
+      limparCarrinho();
     }
   };
 
@@ -85,7 +92,7 @@ function HomePage() {
             >
               <ShoppingBag size={20} />
               {quantidadeTotal > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center animate-bounce">
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
                   {quantidadeTotal}
                 </span>
               )}
@@ -110,7 +117,7 @@ function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {produtosPaginados.map((produto: any) => (
+              {produtosPaginados.map((produto: Produto) => (
                 <ProdutoCard key={produto.id} produto={produto} />
               ))}
             </div>
@@ -146,7 +153,7 @@ function HomePage() {
                 {itens.length === 0 ? (
                   <p className="text-center text-slate-400 py-12 text-sm font-medium">Seu carrinho está vazio.</p>
                 ) : (
-                  itens.map((item: any) => (
+                  itens.map((item: ItemCarrinho) => (
                     <div key={item.id} className="flex items-center justify-between border-b pb-3 gap-4">
                       <div className="h-14 w-14 bg-slate-100 rounded-xl flex items-center justify-center text-2xl select-none">{item.image}</div>
                       <div className="flex-1">
@@ -172,7 +179,6 @@ function HomePage() {
                 <span className="text-xl text-blue-700">R$ {valorTotal.toFixed(2)}</span>
               </div>
               
-              {/* Evento onClick adicionado aqui chamando a nova função */}
               <button 
                 onClick={handleFinalizarCompra}
                 disabled={itens.length === 0} 
