@@ -1,12 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  /* Outras configurações do seu projeto se houver (ex: images, etc) */
+  
   typescript: {
-    // Permite que o build termine com sucesso mesmo se faltar alguma tipagem (como o limparCarrinho)
+    // Força o Turbopack a ignorar o erro de tipo do limparCarrinho no build
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Evita que avisos ou erros de formatação travem o build no GitHub
+    // Garante que o build passe direto por avisos de linting
     ignoreDuringBuilds: true,
   },
 };
