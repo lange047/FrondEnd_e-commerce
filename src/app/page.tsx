@@ -24,8 +24,8 @@ function HomePage() {
   const [modalCategoriaAberto, setModalCategoriaAberto] = useState(false);
   const [modalProdutoAberto, setModalProdutoAberto] = useState(false);
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
-
-  const { alterarQuantidade, removerItem, valorTotal, limparCarrinho } = useCarrinho() as any;
+  
+  const { alterarQuantidade, removerItem, valorTotal, limparCarrinho } = useCarrinho() as any;v
 
   const produtosFiltrados = TODOS_PRODUTOS.filter((p: any) => {
     const matchesCategoria = categoriaAtiva ? p.category.toLowerCase() === categoriaAtiva.toLowerCase() : true;
@@ -37,11 +37,12 @@ function HomePage() {
   const paginaValida = paginaAtual > totalPaginas ? totalPaginas : paginaAtual;
   const produtosPaginados = produtosFiltrados.slice((paginaValida - 1) * itensPorPagina, paginaValida * itensPorPagina);
 
+  // Função executada ao finalizar a compra
   const handleFinalizarCompra = () => {
     alert("Compra finalizada com sucesso!");
-    setCarrinhoAberto(false); 
+    setCarrinhoAberto(false); // Fecha o drawer lateral
     if (limparCarrinho) {
-      limparCarrinho(); 
+      limparCarrinho(); // Limpa os itens do carrinho se a função estiver disponível no Context
     }
   };
 
@@ -65,7 +66,11 @@ function HomePage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <a href="/login" className="p-2 text-slate-500 hover:text-blue-600 flex items-center transition-colors" title="Acessar Login">
+            <a 
+              href="/login" 
+              className="p-2 text-slate-500 hover:text-blue-600 flex items-center transition-colors"
+              title="Acessar Login"
+            >
               <User size={20} /> 
             </a>
             
@@ -99,7 +104,6 @@ function HomePage() {
               </div>
             </div>
 
-            {/* LISTAGEM PRINCIPAL COM IMAGENS (Controladas pelo seu ProdutoCard) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {produtosPaginados.map((produto: any) => (
                 <ProdutoCard key={produto.id} produto={produto} />
@@ -120,7 +124,7 @@ function HomePage() {
         </div>
       </div>
 
-      {/* DRAWER LATERAL DO CARRINHO (Sem imagens, apenas texto) */}
+      {/* DRAWER LATERAL DO CARRINHO */}
       {carrinhoAberto && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end">
           <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between p-6">
@@ -139,18 +143,15 @@ function HomePage() {
                 ) : (
                   itens.map((item: any) => (
                     <div key={item.id} className="flex items-center justify-between border-b pb-3 gap-4">
-                      
-                      {/* IMAGEM REMOVIDA DAQUI - DEIXANDO APENAS O TEXTO FOCADO */}
+                      <div className="h-14 w-14 bg-slate-100 rounded-xl flex items-center justify-center text-2xl select-none">{item.image}</div>
                       <div className="flex-1">
                         <h4 className="font-bold text-sm text-slate-800 line-clamp-1">{item.name}</h4>
                         <span className="text-xs font-black text-blue-600">R$ {(Number(item.price) || 0).toFixed(2)}</span>
                       </div>
-
                       <div className="flex items-center gap-2 border rounded-xl p-1 bg-slate-50">
                         <button onClick={() => alterarQuantidade(item.id, item.quantidade - 1)} className="p-1 hover:bg-white rounded text-slate-600"><Minus size={12} /></button>
                         <span className="text-xs font-bold px-1 w-4 text-center">
-                          {typeof item.quantidade === 'number' && !isNaN(item.quantidade) ? item.quantidade : 0}
-                        </span>
+                          {typeof item.quantidade === 'number' && !isNaN(item.quantidade) ? item.quantidade : 0}</span>
                         <button onClick={() => alterarQuantidade(item.id, item.quantidade + 1)} className="p-1 hover:bg-white rounded text-slate-600"><Plus size={12} /></button>
                       </div>
                       <button onClick={() => removerItem(item.id)} className="p-1 text-slate-400 hover:text-red-500"><Trash2 size={16} /></button>
@@ -166,6 +167,7 @@ function HomePage() {
                 <span className="text-xl text-blue-700">R$ {valorTotal.toFixed(2)}</span>
               </div>
               
+              {/* Evento onClick adicionado aqui chamando a nova função */}
               <button 
                 onClick={handleFinalizarCompra}
                 disabled={itens.length === 0} 
