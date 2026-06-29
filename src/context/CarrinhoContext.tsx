@@ -21,14 +21,12 @@ export interface Produto {
   code?: string;
 }
 
-interface CarrinhoContextType {
-  itens: CartItem[];
+export interface CarrinhoContextType {
+  itens: any[]; 
   alterarQuantidade: (id: number, quantidade: number) => void;
   removerItem: (id: number) => void;
-  adicionarItem: (produto: Produto) => void;
   valorTotal: number;
-  quantidadeTotal: number;
-  limparCarrinho: () => void;
+  limparCarrinho?: () => void; // <--- ADICIONE EXATAMENTE ESTA LINHA
 }
 
 const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
