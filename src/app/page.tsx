@@ -25,7 +25,7 @@ function HomePage() {
   const [modalProdutoAberto, setModalProdutoAberto] = useState(false);
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
 
-  const { quantidadeTotal, itens = [], alterarQuantidade, removerItem, valorTotal, limparCarrinho } = useCarrinho();
+  const { alterarQuantidade, removerItem, valorTotal, limparCarrinho } = useCarrinho() as any;
 
   const produtosFiltrados = TODOS_PRODUTOS.filter((p: any) => {
     const matchesCategoria = categoriaAtiva ? p.category.toLowerCase() === categoriaAtiva.toLowerCase() : true;
